@@ -46,7 +46,7 @@
 //   myPID.SetOutputLimits(0, 255);
 // }
 
-uint8_t i21 = 0;
+// uint8_t i21 = 0;
 // int pos = 0;
 
 // void loop() {
@@ -80,87 +80,89 @@ uint8_t i21 = 0;
 
 // #include <Arduino.h>
 
-#define BUFFERSIZE2 100
-#define KP 1
-#define KI 0
-#define KD 0
+// #define BUFFERSIZE2 100
+// #define KP 1
+// #define KI 0
+// #define KD 0
 
-int sensor;
-int setpoint;
-int error;
-int output;
-int preverror;
-int ledstate;
+// int sensor;
+// int setpoint;
+// int error;
+// int output;
+// int preverror;
+// int ledstate;
 
-int min, max, in, ctl, avg;
+// int min, max, in, ctl, avg;
 
-int buffer2[BUFFERSIZE2];
+// int buffer2[BUFFERSIZE2];
 
-void setup() {
-  Serial.begin(11200);
-  min = analogRead(A5);
-  max = analogRead(A5);
-  in = 0;
-  ctl = 0;
-  avg = 0;
-  ledstate = 0;
-}
+// void setup() {
+//   Serial.begin(11200);
+//   min = analogRead(A5);
+//   max = analogRead(A5);
+//   in = 0;
+//   ctl = 0;
+//   avg = 0;
+//   ledstate = 0;
+// }
 
-void loop() {
-  unsigned long inter = 0;
-  ctl = map(map(analogRead(A0), 0, 1023, 0, 613), 0, 613, 0, 255);
+// void loop() {
+//   unsigned long inter = 0;
+//   ctl = map(map(analogRead(A0), 0, 1023, 0, 613), 0, 613, 0, 255);
 
-  in = ledstate; analogRead(A5);
+//   in = ledstate; analogRead(A5);
 
-  for(i21=0; i21<BUFFERSIZE2; i21++) {
-    inter += buffer2[i21];
-  }
-  avg = inter / (unsigned long)BUFFERSIZE2;
+//   for(i21=0; i21<BUFFERSIZE2; i21++) {
+//     inter += buffer2[i21];
+//   }
+//   avg = inter / (unsigned long)BUFFERSIZE2;
 
-  buffer2[0] = in;
-  memmove(buffer2+1, buffer2, (BUFFERSIZE2-1)*sizeof(int));
+//   buffer2[0] = in;
+//   memmove(buffer2+1, buffer2, (BUFFERSIZE2-1)*sizeof(int));
 
-  bool flag = false;
-  for(i21=0; i21<BUFFERSIZE2; i21++) {
-    if (buffer2[i21]==0) {
-      flag = true;
-    };
-  }
+//   bool flag = false;
+//   for(i21=0; i21<BUFFERSIZE2; i21++) {
+//     if (buffer2[i21]==0) {
+//       flag = true;
+//     };
+//   }
 
-  if (!flag) {
-    if (avg < min) {
-      min = avg;
-    } else if (avg > max) {
-      max = avg;
-    }
-  }
+//   if (!flag) {
+//     if (avg < min) {
+//       min = avg;
+//     } else if (avg > max) {
+//       max = avg;
+//     }
+//   }
 
-  sensor = map(avg, min, max, 0, 255);
-  setpoint = ctl;
-  error = setpoint - sensor;
-  output = (KP*error);
-  ledstate += output;
+//   sensor = map(avg, min, max, 0, 255);
+//   setpoint = ctl;
+//   error = setpoint - sensor;
+//   output = (KP*error);
+//   ledstate += output;
 
 
-  Serial.print(ctl);
-  Serial.print("\t");
-  Serial.print(min);
-  Serial.print("\t");
-  Serial.print(max);
-  Serial.print("\t");
-  Serial.print(in);
-  Serial.print("\t");
-  Serial.print(avg);
-  Serial.print("\t");
-  Serial.print(sensor);
-  Serial.print("\t");
-  Serial.print(error);
-  Serial.print("\t");
-  Serial.print(ledstate);
-  Serial.print("\t");
-  Serial.print(output);
-  Serial.print("\n");
+//   Serial.print(ctl);
+//   Serial.print("\t");
+//   Serial.print(min);
+//   Serial.print("\t");
+//   Serial.print(max);
+//   Serial.print("\t");
+//   Serial.print(in);
+//   Serial.print("\t");
+//   Serial.print(avg);
+//   Serial.print("\t");
+//   Serial.print(sensor);
+//   Serial.print("\t");
+//   Serial.print(error);
+//   Serial.print("\t");
+//   Serial.print(ledstate);
+//   Serial.print("\t");
+//   Serial.print(output);
+//   Serial.print("\n");
 
   
-  analogWrite(PIN_LED_0, ledstate);
-}
+//   analogWrite(PIN_LED_0, ledstate);
+// }
+
+
