@@ -2,9 +2,9 @@
 // #include <encoder.h>
 // #include <PID_v1_bc.h>
 
-#define PIN_LIMIT_0 7
-#define PIN_ENCODER_0 2
-#define PIN_LED_0 3
+// #define PIN_LIMIT_0 7
+// #define PIN_ENCODER_0 2
+// #define PIN_LED_0 3
 
 // unsigned long highTime, lowTime, period;
 // float dutyCycle;
@@ -165,4 +165,97 @@
 //   analogWrite(PIN_LED_0, ledstate);
 // }
 
+#include <Arduino.h>
+#include <encoder.h>
+#include <Servo.h>
 
+#define encoder 5
+#define limit 7
+#define motor 3
+#define signal 6
+
+#define st Serial.print("\t")
+#define sn Serial.print("\n")
+#define sp(x) Serial.print(x)
+#define spt(x) Serial.print(x);Serial.print("\t")
+
+Encoder* flipper_encoder;
+bool motor_kill;
+bool limit_hit;
+int motorin;
+unsigned long signal_in;
+
+
+
+
+Servo Smotor;
+const int minMicros = 1100; // Minimum pulse width in microseconds
+const int maxMicros = 1900; // Maximum pulse width in microseconds
+const int halfSpeedMicros = (maxMicros + minMicros) / 2; // Halfway between min and max
+
+
+
+
+void zint() {
+
+}
+
+void setup() {
+  interrupts();
+  motor_kill = true;
+  limit_hit = false;
+
+  flipper_encoder = encoder_new(encoder);
+  pinMode(signal, INPUT);
+  pinMode(limit, INPUT_PULLUP);
+
+  pinMode(motor, OUTPUT);
+  pinMode(A0, INPUT);
+  Smotor.attach(motor);
+
+  Serial.begin(11200);
+}
+
+
+void loop() {
+  encoder_update(flipper_encoder);
+  if (!digitalRead(limit)) {
+    limit_hit = true;
+  } else {
+    limit_hit = false;
+  }
+
+  if (limit_hit) {
+    encoder_zero(flipper_encoder);
+  }
+
+  if ((150 < flipper_encoder->angle) && (flipper_encoder->angle < 360)) {
+    motor_kill = false;
+  } else {
+    motor_kill = true;
+  }
+
+  signal_in = pulseIn(signal, HIGH);
+
+
+  //if (!motor_kill) {
+    // motorin = pulseIn(A0, HIGH);
+    // pinMode(motor, OUTPUT);
+    // Smotor.attach(motor);
+    Smotor.writeMicroseconds(signal_in);
+  // }
+  // else {
+  //   // Smotor.detach();
+  //   pinMode(motor, INPUT);
+  //   // Smotor.writeMicroseconds(0);
+  // }
+
+
+  spt(flipper_encoder->angle);
+  spt(signal_in);
+  spt(halfSpeedMicros-map(signal_in, 980, 1980, 0, 255)-(255/2));
+  spt(limit_hit);
+  spt(motor_kill);
+  spt(motorin);
+  sn;
+}

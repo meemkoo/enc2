@@ -13,6 +13,7 @@ Encoder* encoder_new(int pwmPin) {
   new_encoder->period = 0;
 
   new_encoder->pwmPin = pwmPin;
+  pinMode(new_encoder->pwmPin, INPUT);
 
   return new_encoder;
 }
